@@ -1,0 +1,42 @@
+#######################################
+# Syntax Coloring Map For RX8900
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RX8900RTC	KEYWORD1
+WEEK_DAY_ALARM_TYPES_t	KEYWORD1
+ALARM_TYPES_t	KEYWORD1
+CLOCK_TYPES_t	KEYWORD1
+USEL_t	KEYWORD1
+regRX8900_t	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+get	KEYWORD2
+set	KEYWORD2
+read	KEYWORD2
+write	KEYWORD2
+setFullAlarm	KEYWORD2
+setAlarm	KEYWORD2
+setDayAlarm	KEYWORD2
+setWeekAlarm	KEYWORD2
+alarmInterrupt	KEYWORD2
+alarm	KEYWORD2	KEYWORD2
+setCycleTimer	KEYWORD2
+cylceTimerInterrupt	KEYWORD2
+cycleTimer	KEYWORD2
+setTimeUpdateTimer	KEYWORD2
+timeUpdateTimerInterrupt	KEYWORD2
+timeUpdateTimer	KEYWORD2
+temperature	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
