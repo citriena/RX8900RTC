@@ -15,20 +15,21 @@ See sample skech for basic usage of alarm and timer.
 See Application Manual for details of each function.
 https://www5.epsondevice.com/en/products/rtc/rx8900ce.html
 
+## 概要
+このArduino用ライブラリはセイコーエプソンのSEIKO EPSON RX8900 Real Time Clock Module用に作成したものです。
+実際に使用しているのは、秋月電子通商の「高精度ＲＴＣ（リアルタイムクロック）　ＲＸ８９００　ＤＩＰ化モジュール」
+http://akizukidenshi.com/catalog/g/gK-13009/
+です。
 
-����Arduino�p���C�u�����̓Z�C�R�[�G�v�\����SEIKO EPSON RX8900 Real Time Clock Module�p�ɍ쐬�������̂ł��B
-���ۂɎg�p���Ă���̂́A�H���d�q�ʏ��́u�����x�q�s�b�i���A���^�C���N���b�N�j�@�q�w�W�X�O�O�@�c�h�o�����W���[���v
-http://akizukidenshi.com/catalog/g/gK-13009/�@�ł��B
+Arduino用のRTCモジュール、およびそのライブラリは他にもいろいろありますが、私が使って見た限りではLEDを外してもなぜか数百uAと
+電池駆動で数カ月～年単位で使うには消費電流が無視できない大きさのものばかりでした。SEIKO EPSON RX8900 Real Time Clock Moduleは
+数uA以下と消費電流が非常に小さいのは確認できましたが、目的にあうArduinoライブラリが見つかりませんでしたので、自作しました。
 
-Arduino�p��RTC���W���[���A����т��̃��C�u�����͑��ɂ����낢�날��܂����A�����g���Č�������ł�LED���O���Ă��Ȃ������SuA��
-�d�r�쓮�Ő��J���`�N�P�ʂŎg���ɂ͏���d���������ł��Ȃ��傫���̂��̂΂���ł����BSEIKO EPSON RX8900 Real Time Clock Module��
-��uA�ȉ��Ə���d�������ɏ������̂͊m�F�ł��܂������A�ړI�ɂ���Arduino���C�u������������܂���ł����̂ŁA���삵�܂����B
-
-�x�[�X�͏H���d�q�ʏ��Œ񋟂���Ă���T���v���X�P�b�`�ŁA��������ƂɃ��C�u���������܂����B
+ベースは秋月電子通商で提供されているサンプルスケッチで、それをもとにライブラリ化しました。
   http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip
-RX8900�̃A�v���P�[�V�����}�j���A���ɂ����ʂ�̋@�\�͈ꉞ������������ł��B
+RX8900のアプリケーションマニュアルにある一通りの機能は一応実装したつもりです。
 
-��{�I�Ȏg�����̓T���v���X�P�b�`���Q�Ƃ��Ă��������B
+基本的な使い方はサンプルスケッチを参照してください。
 
-�^�C�}�[�Ɋւ���X�̋@�\�̏ڍׂɂ��Ă�RX8900�̃A�v���P�[�V�����}�j���A�������Ă��炤�����m���ł��̂ŁA��������Q�Ƃ��Ă��������B
+タイマーに関する個々の機能の詳細についてはRX8900のアプリケーションマニュアルを見てもらう方が確実ですので、そちらを参照してください。
 https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
