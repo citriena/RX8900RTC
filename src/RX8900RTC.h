@@ -61,23 +61,23 @@ typedef enum {
 } INTERRUPT_ENABLE_t;
 
 typedef enum {
-  CYCLE4096HZ  = 0b00000000,
-  CYCLE64HZ    = 0b00000001,
-  CYCLE1HZ     = 0b00000010,
-  CYCLE60THHZ  = 0b00000011,
-} CLOCK_TYPES_t;
+  CYCLE_4096HZ = 0b00000000, // 4096Hz
+  CYCLE_64HZ   = 0b00000001, // 64Hz
+  CYCLE_SECOND = 0b00000010, // second update
+  CYCLE_MINUTE = 0b00000011, // minute update
+} FIXED_CYCLE_TYPES_t;
 
 
 typedef enum {
-  UPDATE_SECOND_TIMER = 0b00000000,
-  UPDATE_MINUTE_TIMER = 0b00100000,
+  UPDATE_SECOND_INT = 0b00000000, // update second interrupt
+  UPDATE_MINUTE_INT = 0b00100000, // update minute interrupt
 } USEL_t;
 
 
 typedef struct {
-  unsigned char SEC     = 0x00;//0x00-0x59
-  unsigned char MIN     = 0x00;//0x00-0x59
-  unsigned char HOUR    = 0x00;//0x00-0x23
+  unsigned char SEC     = 0x00;//0x00-0x59 (bcd)
+  unsigned char MIN     = 0x00;//0x00-0x59 (bcd)
+  unsigned char HOUR    = 0x00;//0x00-0x23 (bcd)
   unsigned char WEEK    = 0x01;//SUN=0x01,MON=0x02,TUE=0x04,WED=0x08,THU=0x10,FRI=0x20,SAT=0x40
   unsigned char DAY     = 0x01;//0x00-0x28-0x31)
   unsigned char MONTH   = 0x01;//JUN=0x01,FEB=0x02,MAR=0x03,APR=0x04,MAY=0x05,JUN=0x06,JLY=0x07,AUG=0x08,SEP=0x09,OCT=0x10,NOV=0x11,DEC=0x12
@@ -108,18 +108,18 @@ class RX8900RTC {
     void setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minutes, byte hours, byte daydate);
     void setAlarm(byte minutes, byte hours);
     void setAlarm(byte minutes);
-    void setDayAlarm(byte minutes, byte hours, byte daydate);
-    void setWeekAlarm(byte minutes, byte hours, byte daydate);
+    void setDayAlarm(byte minutes, byte hours, byte daydate);   // set day of a month to daydate.
+    void setWeekAlarm(byte minutes, byte hours, byte daydate);  // set week alarm mask to daydate such as SUN | SAT.
     void alarmInterrupt(INTERRUPT_ENABLE_t interruptEnabled);
-    bool alarm(void);
-    void setCycleTimer(int timerCounter, CLOCK_TYPES_t sClock);
-    void cylceTimerInterrupt(bool interruptEnabled);
-    bool cycleTimer(void);
+    bool alarmUp(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
+    void setFixedCycleTimer(int timerCounter, FIXED_CYCLE_TYPES_t fixedCycle);
+    void fixedCycleTimerInterrupt(bool interruptEnabled);
+    bool fixedCycleTimerUp(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".
     void setTimeUpdateTimer(USEL_t uTiming);
     void timeUpdateTimerInterrupt(bool interruptEnabled);
-    bool timeUpdateTimer(void);
-    bool IS_VLF(void);               //IS VLF ON?
-    bool IS_VDET(void);              //IS VDET FLAG ON?
+    bool timeUpdateTimerUp(void);  // Returns UF (Update Flag) status and reset UF if UF is "1".
+    bool IS_VLF(void);   // Returns IS VLF (Voltage Low Flag) status. TRUE: Supply voltage drop less than 1.6V or oscillation stopped.
+    bool IS_VDET(void);  // Returns IS VDET (Voltage Detection Flag) FLAG status. TRUE: Supply voltage drop less than 1.95V.
     float temperature(void);
 
   private:
@@ -143,7 +143,7 @@ class RX8900RTC {
     void SET_TE(void);               //TIMER ENABLE
     void RESET_TE(void);             //TIMER DISABLE
     void SET_TSEL_1S(void);          //SET TIMER INTERVAL 1sec
-    void SET_TSEL(CLOCK_TYPES_t sClock);      //SET TIMER INTERVAL
+    void SET_TSEL(FIXED_CYCLE_TYPES_t fixedCycle);   //SET FIXED CYCLE INTERRUPT INTERVAL
 
     void SET_UIE(void);              //UPDATE INTERRUPT ENABLE
     void RESET_UIE(void);            //UPDATE INTERRUPT DISABLE
@@ -153,7 +153,7 @@ class RX8900RTC {
 
     byte subZeller( int y, int m, int d );
     byte dec2bcd(uint8_t n);
-    static byte bcd2dec(byte n);
+    static byte bcd2dec(uint8_t n);
 };
 
 //extern RX8900RTC RTC;

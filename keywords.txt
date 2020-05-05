@@ -27,13 +27,13 @@ setAlarm	KEYWORD2
 setDayAlarm	KEYWORD2
 setWeekAlarm	KEYWORD2
 alarmInterrupt	KEYWORD2
-alarm	KEYWORD2	KEYWORD2
-setCycleTimer	KEYWORD2
-cylceTimerInterrupt	KEYWORD2
-cycleTimer	KEYWORD2
+alarmUp	KEYWORD2	KEYWORD2
+setFixedCycleTimer	KEYWORD2
+fixedCycleTimerInterrupt	KEYWORD2
+fixedCycleTimerUp	KEYWORD2
 setTimeUpdateTimer	KEYWORD2
 timeUpdateTimerInterrupt	KEYWORD2
-timeUpdateTimer	KEYWORD2
+timeUpdateTimerUp	KEYWORD2
 temperature	KEYWORD2
 
 #######################################
