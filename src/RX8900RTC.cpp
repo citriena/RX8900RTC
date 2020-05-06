@@ -92,30 +92,38 @@ void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, by
   RESET_AIE();
   if (minute < 60) {                 // cause an alarm when the minute match. 60 > cause no minute match alarm.
     minute = dec2bcd(minute);
+    ByteWrite(MIN_Alarm_reg, minute);
   } else {
-    minute = 0b10000000;
+    RESET_AE(MINUTE_ALARM);
   }
-  ByteWrite(MIN_Alarm_reg, minute);
 
   if (hour < 24) {                  // cause an alarm when the hour match. 24> cause no hour match alarm.
     hour = dec2bcd(hour);
+    ByteWrite(HOUR_Alarm_reg, hour);
   } else {
-    hour = 0b10000000;              // set Hour Alarm register bit 7 1 to 
+    RESET_AE(HOUR_ALARM);
   }
-  ByteWrite(HOUR_Alarm_reg, hour);
 
   if (wdAlarmType == DAY_ALARM) {
     ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) | 0b01000000));
     daydate = dec2bcd(daydate);
+    ByteWrite(WEEK_DAY_Alarm_reg, daydate);
   } else if (wdAlarmType == WEEK_ALARM){
     ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) & 0b10111111));
-     daydate = dec2bcd(daydate);
+    daydate = dec2bcd(daydate);
+    ByteWrite(WEEK_DAY_Alarm_reg, daydate);
   } else {
-    daydate = 0b10000000;
+    RESET_AE(WEEK_DAY_ALARM);
   }
-  ByteWrite(WEEK_DAY_Alarm_reg, daydate);
   SET_AIE();
   RESET_AF();
+}
+
+
+void RX8900RTC::resetAlarm() {
+  RESET_AE(MINUTE_ALARM);
+  RESET_AE(HOUR_ALARM);
+  RESET_AE(WEEK_DAY_ALARM);
 }
 
 
@@ -178,6 +186,11 @@ void RX8900RTC::setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t source
   SET_TSEL(sourceCycle);
   SET_TE();
   RESET_TF();
+}
+
+
+void RX8900RTC::resetFixedCycleTimer() {
+  RESET_TE();
 }
 
 
@@ -358,6 +371,9 @@ void RX8900RTC::SET_AE(ALARM_TYPES_t reg) {         //ALARM ENABLE
 //---------------------------
 void RX8900RTC::RESET_AE(ALARM_TYPES_t reg) {         //ALARM DISABLE
   ByteWrite(reg, ByteRead(reg) | 0b10000000);
+
+
+
 }
 
 

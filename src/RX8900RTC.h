@@ -106,6 +106,7 @@ class RX8900RTC {
     static tmElements_t read(void);
     byte write(tmElements_t tm);
     void setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, byte hour, byte daydate);
+    void resetAlarm();
     void setAlarm(byte minute, byte hour);
     void setAlarm(byte minute);
     void setDayAlarm(byte minute, byte hour, byte daydate);   // set day of a month to daydate.
@@ -113,6 +114,7 @@ class RX8900RTC {
     void alarmInterrupt(INTERRUPT_ENABLE_t interruptEnabled);
     bool alarmUp(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
     void setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle);
+    void resetFixedCycleTimer();
     void fixedCycleTimerInterrupt(bool interruptEnabled);
     bool fixedCycleTimerUp(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".
     void setTimeUpdateTimer(USEL_t uTiming);

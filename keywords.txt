@@ -38,12 +38,14 @@ set	KEYWORD2
 read	KEYWORD2
 write	KEYWORD2
 setFullAlarm	KEYWORD2
+resetAlarm	KEYWORD2
 setAlarm	KEYWORD2
 setDayAlarm	KEYWORD2
 setWeekAlarm	KEYWORD2
 alarmInterrupt	KEYWORD2
 alarmUp	KEYWORD2	KEYWORD2
 setFixedCycleTimer	KEYWORD2
+resetFixedCycleTimer	KEYWORD2
 fixedCycleTimerInterrupt	KEYWORD2
 fixedCycleTimerUp	KEYWORD2
 setTimeUpdateTimer	KEYWORD2

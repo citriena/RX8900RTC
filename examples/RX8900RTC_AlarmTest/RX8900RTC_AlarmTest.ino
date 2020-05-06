@@ -16,9 +16,9 @@ void setup() {
   Wire.begin();
   Serial.begin(9600);
   RTC.init();
-  RTC.alarmInterrupt(INTERRUPT_DISABLE);
-  RTC.timeUpdateTimerInterrupt(INTERRUPT_DISABLE);
-  RTC.fixedCycleTimerInterrupt(INTERRUPT_DISABLE);
+  RTC.resetAlarm();
+  RTC.resetFixedCycleTimer();
+  RTC.timeUpdateTimerInterrupt(INTERRUPT_DISABLE); // Time Update Timer cannot be fully stopped. 
   
   pinMode(ALARM_INT_PIN, INPUT_PULLUP);  // interrupt input pin should be input mode to wake up from sleep mode
 
@@ -149,9 +149,9 @@ void setUpdateMinuteInt() {
 }
 
 //set timer to fire every interval time
-void setfixedCycleInt(int timerCounter, FIXED_CYCLE_TYPES_t fixedCycle) {
+void setfixedCycleInt(int timerCounter, SOURCE_CLOCK_TYPES_t sourceClock) {
   attachInterrupt(digitalPinToInterrupt(ALARM_INT_PIN), alcall, FALLING);
-  RTC.setFixedCycleTimer(timerCounter, fixedCycle); //
+  RTC.setFixedCycleTimer(timerCounter, sourceClock); //
   Serial.println("Fixed cycle Timer is set.");
   RTC.fixedCycleTimerInterrupt(INTERRUPT_ENABLE);
 }
