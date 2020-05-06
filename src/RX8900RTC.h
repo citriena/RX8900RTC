@@ -65,7 +65,7 @@ typedef enum {
   CYCLE_64HZ   = 0b00000001, // 64Hz
   CYCLE_SECOND = 0b00000010, // second update
   CYCLE_MINUTE = 0b00000011, // minute update
-} FIXED_CYCLE_TYPES_t;
+} SOURCE_CLOCK_TYPES_t;
 
 
 typedef enum {
@@ -105,14 +105,14 @@ class RX8900RTC {
     byte set(time_t t);
     static tmElements_t read(void);
     byte write(tmElements_t tm);
-    void setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minutes, byte hours, byte daydate);
-    void setAlarm(byte minutes, byte hours);
-    void setAlarm(byte minutes);
-    void setDayAlarm(byte minutes, byte hours, byte daydate);   // set day of a month to daydate.
-    void setWeekAlarm(byte minutes, byte hours, byte daydate);  // set week alarm mask to daydate such as SUN | SAT.
+    void setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, byte hour, byte daydate);
+    void setAlarm(byte minute, byte hour);
+    void setAlarm(byte minute);
+    void setDayAlarm(byte minute, byte hour, byte daydate);   // set day of a month to daydate.
+    void setWeekAlarm(byte minute, byte hour, byte daydate);  // set week alarm mask to daydate such as SUN | SAT.
     void alarmInterrupt(INTERRUPT_ENABLE_t interruptEnabled);
     bool alarmUp(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
-    void setFixedCycleTimer(int timerCounter, FIXED_CYCLE_TYPES_t fixedCycle);
+    void setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle);
     void fixedCycleTimerInterrupt(bool interruptEnabled);
     bool fixedCycleTimerUp(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".
     void setTimeUpdateTimer(USEL_t uTiming);
@@ -143,7 +143,7 @@ class RX8900RTC {
     void SET_TE(void);               //TIMER ENABLE
     void RESET_TE(void);             //TIMER DISABLE
     void SET_TSEL_1S(void);          //SET TIMER INTERVAL 1sec
-    void SET_TSEL(FIXED_CYCLE_TYPES_t fixedCycle);   //SET FIXED CYCLE INTERRUPT INTERVAL
+    void SET_TSEL(SOURCE_CLOCK_TYPES_t sourceClock);   //SET FIXED CYCLE INTERRUPT INTERVAL
 
     void SET_UIE(void);              //UPDATE INTERRUPT ENABLE
     void RESET_UIE(void);            //UPDATE INTERRUPT DISABLE

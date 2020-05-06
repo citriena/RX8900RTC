@@ -88,21 +88,21 @@ byte RX8900RTC::write(tmElements_t tm) {
 }
 
 
-void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minutes, byte hours, byte daydate) {
+void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, byte hour, byte daydate) {
   RESET_AIE();
-  if (minutes < 60) {                 // cause an alarm when the minute match. 60 > cause no minutes match alarm.
-    minutes = dec2bcd(minutes);
+  if (minute < 60) {                 // cause an alarm when the minute match. 60 > cause no minute match alarm.
+    minute = dec2bcd(minute);
   } else {
-    minutes = 0b10000000;
+    minute = 0b10000000;
   }
-  ByteWrite(MIN_Alarm_reg, minutes);
+  ByteWrite(MIN_Alarm_reg, minute);
 
-  if (hours < 24) {                  // cause an alarm when the hour match. 24> cause no hours match alarm.
-    hours = dec2bcd(hours);
+  if (hour < 24) {                  // cause an alarm when the hour match. 24> cause no hour match alarm.
+    hour = dec2bcd(hour);
   } else {
-    hours = 0b10000000;              // set Hour Alarm register bit 7 1 to 
+    hour = 0b10000000;              // set Hour Alarm register bit 7 1 to 
   }
-  ByteWrite(HOUR_Alarm_reg, hours);
+  ByteWrite(HOUR_Alarm_reg, hour);
 
   if (wdAlarmType == DAY_ALARM) {
     ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) | 0b01000000));
@@ -119,23 +119,23 @@ void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minutes, b
 }
 
 
-void RX8900RTC::setAlarm(byte minutes, byte hours) {
-  setFullAlarm(NO_WEEK_DAY_ALARM, minutes, hours, 0);
+void RX8900RTC::setAlarm(byte minute, byte hour) {
+  setFullAlarm(NO_WEEK_DAY_ALARM, minute, hour, 0);
 }
 
 
-void RX8900RTC::setAlarm(byte minutes) {
-  setFullAlarm(NO_WEEK_DAY_ALARM, minutes, 99, 0);
+void RX8900RTC::setAlarm(byte minute) {
+  setFullAlarm(NO_WEEK_DAY_ALARM, minute, 99, 0);
 }
 
 
-void RX8900RTC::setDayAlarm(byte minutes, byte hours, byte daydate) {
-  setFullAlarm(DAY_ALARM, minutes, hours, daydate);
+void RX8900RTC::setDayAlarm(byte minute, byte hour, byte daydate) {
+  setFullAlarm(DAY_ALARM, minute, hour, daydate);
 }
 
 
-void RX8900RTC::setWeekAlarm(byte minutes, byte hours, byte daydate) {
-  setFullAlarm(WEEK_ALARM, minutes, hours, daydate);
+void RX8900RTC::setWeekAlarm(byte minute, byte hour, byte daydate) {
+  setFullAlarm(WEEK_ALARM, minute, hour, daydate);
 }
 
 
@@ -166,16 +166,16 @@ bool RX8900RTC::alarmUp() {
 
 /*----------------------------------------------------------------------*
  * set the preset countdown value (1 to 4095) to timerCounter           *
- * Fixed-cycle interrupt interval = (timerCounter * cycle)              *
+ * Fixed-cycle interrupt interval = (timerCounter * courceCycle)        *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::setFixedCycleTimer(int timerCounter, FIXED_CYCLE_TYPES_t fixedCycle) {
+void RX8900RTC::setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle) {
   RESET_TE();
   RESET_TF();
   RESET_TIE();
   ByteWrite(Timer_Counter_0_reg,timerCounter % 256);
   ByteWrite(Timer_Counter_1_reg,timerCounter / 256);
-  SET_TSEL(fixedCycle);
+  SET_TSEL(sourceCycle);
   SET_TE();
   RESET_TF();
 }
@@ -210,8 +210,8 @@ bool RX8900RTC::fixedCycleTimerUp() {
 
 /*----------------------------------------------------------------------*
  * uTiming                                                              *
- *   UPDATE_SECOND_INT: Update interrupt timing is once per seconds     *
- *   UPDATE_MINUTE_INT: Update interrupt timing is once per minutes     *
+ *   UPDATE_SECOND_INT: Update interrupt timing is once per second      *
+ *   UPDATE_MINUTE_INT: Update interrupt timing is once per minute      *
  *----------------------------------------------------------------------*/
 void RX8900RTC::setTimeUpdateTimer(USEL_t uTiming) {
   RESET_UIE();
@@ -403,8 +403,8 @@ void RX8900RTC::SET_TSEL_1S(void) {      //SET TIMER INTERVAL 1sec
 }
 
 
-void RX8900RTC::SET_TSEL(FIXED_CYCLE_TYPES_t fixedCycle) {         //SET TIMER INTERVAL
-  ByteWrite(Extension_Register_reg,(ByteRead(Extension_Register_reg) & 0b11111100) | fixedCycle); // set Count down cycle (source clock)
+void RX8900RTC::SET_TSEL(SOURCE_CLOCK_TYPES_t sourceClock) {         //SET TIMER INTERVAL
+  ByteWrite(Extension_Register_reg,(ByteRead(Extension_Register_reg) & 0b11111100) | sourceClock); // set Count down cycle (source clock)
 }
 
 
