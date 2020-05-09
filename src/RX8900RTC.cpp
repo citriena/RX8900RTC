@@ -105,25 +105,18 @@ void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, by
   }
 
   if (wdAlarmType == DAY_ALARM) {
-    ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) | 0b01000000));
+    SET_WADA_D();
     daydate = dec2bcd(daydate);
     ByteWrite(WEEK_DAY_Alarm_reg, daydate);
   } else if (wdAlarmType == WEEK_ALARM){
-    ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) & 0b10111111));
+    SET_WADA_W();
     daydate = dec2bcd(daydate);
     ByteWrite(WEEK_DAY_Alarm_reg, daydate);
   } else {
     RESET_AE(WEEK_DAY_ALARM);
   }
-  SET_AIE();
   RESET_AF();
-}
-
-
-void RX8900RTC::resetAlarm() {
-  RESET_AE(MINUTE_ALARM);
-  RESET_AE(HOUR_ALARM);
-  RESET_AE(WEEK_DAY_ALARM);
+//  SET_AIE();
 }
 
 
@@ -147,12 +140,21 @@ void RX8900RTC::setWeekAlarm(byte minute, byte hour, byte daydate) {
 }
 
 
+void RX8900RTC::disableAlarm() {
+  RESET_AIE();
+  RESET_AF();
+  SET_WADA_W();
+  ByteWrite(WEEK_DAY_Alarm_reg, 0);
+  RESET_AF();
+}
+
+
 /*----------------------------------------------------------------------*
  * Enable or disable an alarm "interrupt" which asserts the INT pin     *
  * on the RTC.                                                          *
  *----------------------------------------------------------------------*/
-void RX8900RTC::alarmInterrupt(INTERRUPT_ENABLE_t interruptEnabled) {
-  if (interruptEnabled) {
+void RX8900RTC::alarmInterrupt(ENABLE_CONTROL_t enabled) {
+  if (enabled) {
     SET_AIE();
   } else {
     RESET_AIE();
@@ -164,7 +166,7 @@ void RX8900RTC::alarmInterrupt(INTERRUPT_ENABLE_t interruptEnabled) {
  * Returns true or false depending on whether the given alarm has been  *
  * triggered, and resets the alarm flag bit.                            *
  *----------------------------------------------------------------------*/
-bool RX8900RTC::alarmUp() {
+bool RX8900RTC::alarm() {
   boolean isAF = IS_AF();
 //  boolean isAF = !(IS_AF() == 0) ;
   if (isAF) RESET_AF();  //AF (Alarm Flag) is retained until manual reset.
@@ -177,20 +179,23 @@ bool RX8900RTC::alarmUp() {
  * Fixed-cycle interrupt interval = (timerCounter * courceCycle)        *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle) {
+void RX8900RTC::setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceClock) {
   RESET_TE();
   RESET_TF();
   RESET_TIE();
   ByteWrite(Timer_Counter_0_reg,timerCounter % 256);
   ByteWrite(Timer_Counter_1_reg,timerCounter / 256);
-  SET_TSEL(sourceCycle);
+  SET_TSEL(sourceClock);
   SET_TE();
   RESET_TF();
-}
+//  SET_TIE();
+ }
 
 
-void RX8900RTC::resetFixedCycleTimer() {
+void RX8900RTC::disableFixedCycleTimer() {
   RESET_TE();
+  RESET_TF();
+  RESET_TIE();
 }
 
 
@@ -200,8 +205,8 @@ void RX8900RTC::resetFixedCycleTimer() {
  * cleared earliest 7.813 ms after the interrupt occurs.                *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::fixedCycleTimerInterrupt(bool interruptEnabled) {
-  if (interruptEnabled) {
+void RX8900RTC::fixedCycleTimerInterrupt(ENABLE_CONTROL_t enabled) {
+  if (enabled) {
     SET_TIE();
   } else {
     RESET_TIE();
@@ -213,7 +218,7 @@ void RX8900RTC::fixedCycleTimerInterrupt(bool interruptEnabled) {
  * Returns true or false depending on whether the timerCounter has been *
  * count upped, and resets the TF (Timer flag)  if TF is "1"            *
  *----------------------------------------------------------------------*/
-bool RX8900RTC::fixedCycleTimerUp() {
+bool RX8900RTC::fixedCycleTimer() {
   bool tf = IS_TF();
 //  bool tf = (IS_TF() != 0);
   if (tf)  RESET_TF();        //  TF (Timer Flag) is retained until manual reset.
@@ -242,8 +247,8 @@ void RX8900RTC::setTimeUpdateTimer(USEL_t uTiming) {
  * /INT pin status is prevented.                                        *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::timeUpdateTimerInterrupt(bool interruptEnabled) {
-  if (interruptEnabled) {
+void RX8900RTC::timeUpdateTimerInterrupt(ENABLE_CONTROL_t enabled) {
+  if (enabled) {
     SET_UIE();
   } else {
     RESET_UIE();  // can only stop /INT status change
@@ -255,7 +260,7 @@ void RX8900RTC::timeUpdateTimerInterrupt(bool interruptEnabled) {
  * Returns true or false depending on whether the update event has been *
  * occured and resets the UF if UF is "1"                               *
  *----------------------------------------------------------------------*/
-bool RX8900RTC::timeUpdateTimerUp() {
+bool RX8900RTC::timeUpdateTimer() {
   bool uf = (IS_UF() != 0);
   if (uf) RESET_UF();    //  UF (Update Flag) is retained until reset.
   return uf;
@@ -363,17 +368,24 @@ byte RX8900RTC::IS_AF(void) {            //IS ALARM TIME?
 
 
 //---------------------------
-void RX8900RTC::SET_AE(ALARM_TYPES_t reg) {         //ALARM ENABLE
+void RX8900RTC::SET_AE(ALARM_TYPES_t reg) {         //ALARM ENABLE ()
   ByteWrite(reg, ByteRead(reg) & 0b01111111);
 }
 
 
 //---------------------------
-void RX8900RTC::RESET_AE(ALARM_TYPES_t reg) {         //ALARM DISABLE
+void RX8900RTC::RESET_AE(ALARM_TYPES_t reg) {         //ALARM DISABLE ()
   ByteWrite(reg, ByteRead(reg) | 0b10000000);
+}
 
 
+void RX8900RTC::SET_WADA_W() {         // SET WADA WEEK ALARM
+  ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) & 0b10111111));
+}
 
+
+void RX8900RTC::SET_WADA_D() {         // SET WADA DAY ALARM
+  ByteWrite(Extension_Register_reg, (ByteRead(Extension_Register_reg) | 0b01000000));
 }
 
 

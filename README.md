@@ -41,28 +41,35 @@ https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
 
 #### 設定
 
-##### void setAlarm(byte minutes);
+##### void setAlarm(byte minute);
 minuteで[分]を設定します。毎時、設定した[分]になると割り込みイベントが発生します。
 
 ##### void setAlarm(byte minute, byte hour);
 minuteで[分]、hourで[時]を設定します。毎日、設定した[時][分]になると割り込みイベントが発生します。
 
-##### void setDayAlarm(byte minutes, byte hours, byte daydate);
+##### void setDayAlarm(byte minute, byte hour, byte daydate);
 minuteで[分]、hourで[時]、daydateで[日]を設定します。毎月、設定した[日][時][分]になると割り込みイベントが発生します。
 
-##### void setWeekAlarm(byte minutes, byte hours, byte daydate);
+##### void setWeekAlarm(byte minute, byte hour, byte daydate);
 minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設定した[曜][時][分]になると割り込みイベントが発生します。
 [曜]は以下で設定します。
  * 日: SUN, 月: MON, 火: TUE, 水: WED, 木: THU, 金: FRI, 土: SAT
 
 複数の[曜]が設定可能です。たとえば SUN | SAT とすれば日曜と土曜日に割り込みイベントが発生します。
 
-##### void resetAlarm();
+##### alarmInterrupt(ENABLE_CONTROL_t enabled);
+割り込みイベント発生時における/INT の動作を指定します。
+
+enabled には以下が設定できます。
+ * ENABLE：割り込みイベント発生時に/INT を"L"にします。
+ * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
+
+##### void disableAlarm(void);
 アラームを無効にします。
 
 #### 割り込みイベント発生時
- * AF(Alarm Flag)が"1"になります。AFは手動でリセットしない限り保持されます。bool alarmUp(void) でAFの確認、および"1"だったらリセットが行えます。
- * alarmInterrupt(INTERRUPT_ENABLE) を実行していれば /INT は"L" になります。 /INT出力は手動解除しない限り保持されます。bool alarmUp(void)でAFをリセットすると /INTもリセット（"H"）されます。
+ * AF(Alarm Flag)が"1"になります。AFは手動でリセットしない限り保持されます。bool alarm(void) でAFの確認、および"1"だったらリセットが行えます。
+ * alarmInterrupt(ENABLE) を実行していれば /INT は"L" になります。 /INT出力は手動解除しない限り保持されます。bool alarm(void)でAFをリセットすると /INTもリセット（"H"）されます。
 
 ### 定周期タイマー
 定期的な割り込みイベントを発生させる機能です。設定できる定周期は244.14us～4095minです。
@@ -70,18 +77,29 @@ minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設
 #### 設定
 定周期は、ソースクロックとタイマーカウンターで設定します。
 
-##### void setFixedCycleTimer(timerCounter, sourceClock)
- * timerCounter(タイマーカウンター)：0～4095
- * sourceClock（ソースクロック）：4096Hz、64Hz、1Hz（1秒周期）、1/60Hz（1分周期）の4種類
+##### void setFixedCycleTimer(timerCounter, sourceClock);
+* timerCounter(タイマーカウンター)：0～4095
+* sourceClock（ソースクロック）:
+ * CLOCK_4096HZ：4096Hz
+ * CLOCK_64HZ：64Hz
+ * SECOND_UPDATE：1Hz（1秒周期）
+ * MINUTE_UPDATE：1/60Hz（1分周期）
 
-が設定できます。ソースクロック毎にタイマーカウンターがカウントダウンしていき、0になったら割り込みイベントが発生します。このため、定周期は、[ソースクロック]×[タイマーカウンター]となります。たとえば[ソースクロック]を1秒周期、タイマーカウンターを13とすれば、13秒ごとに割り込みイベントが発生します。割り込みイベントが発生するとタイマーカウンターは自動的に設定値に戻り、繰り返し動作します。
+が設定できます。ソースクロック毎にタイマーカウンターがカウントダウンしていき、0になったら割り込みイベントが発生します。このため定周期は、[ソースクロック]×[タイマーカウンター]となります。たとえば[ソースクロック]を1秒周期、タイマーカウンターを13とすれば、13秒ごとに割り込みイベントが発生します。割り込みイベントが発生するとタイマーカウンターは自動的に設定値に戻り、繰り返し動作します。
 
-##### void resetFixedCycleTimer()
+##### fixedCycleTimerInterrupt(ENABLE_CONTROL_t enabled);
+割り込みイベント発生時における/INT の動作を指定します。
+
+enabled には以下が設定できます。
+ * ENABLE：割り込みイベント発生時に/INT を"L"にします。
+ * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
+
+##### void disableFixedCycleTimer(void);
 定周期タイマーを無効にします。
 
 #### 割り込みイベント発生時
- * TF(Timer Flag)が"1"になります。TFは手動でリセットしない限り保持されます。bool fixedCycleTimerUp(void) でTFの確認、および"1"だったらリセットが行えます。
- * fixedCycleTimerInterrupt(INTERRUPT_ENABLE) を実行していれば /INT は"L" になります。 /INT出力は 7.813msで自動解除されます。
+ * TF(Timer Flag)が"1"になります。TFは手動でリセットしない限り保持されます。bool fixedCycleTimer(void) でTFの確認、および"1"だったらリセットが行えます。
+ * fixedCycleTimerInterrupt(ENABLE) を実行していれば /INT は"L" になります。 /INT出力は 7.813msで自動解除されます。
 
 #### カウントダウンのタイミング
  * ソースクロック1Hz（1秒周期）時のカウントダウンは､内部計時の[秒]更新に連動しません。
@@ -92,14 +110,21 @@ minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設
 
 #### 設定
 
-##### void setTimeUpdateTimer(USEL_t uTiming)
+##### void setTimeUpdateTimer(USEL_t uTiming);
 
-uTimingは
+uTiming:
  * UPDATE_SECOND_INT = 1秒更新
  * UPDATE_MINUTE_INT = 1分更新
 
-が設定できます。
+##### timeUpdateTimerInterrupt(ENABLE_CONTROL_t enabled);
+
+割り込みイベント発生時における/INT の動作を指定します。
+
+enabled:
+ * ENABLE：割り込みイベント発生時に/INT を"L"にします。
+ * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
+
 
 #### 割り込みイベント発生時
- * UF(Update flag)が"1"になります。UFは手動でリセットしない限り保持されます。bool timeUpdateTimerUp(void) でUFの確認、および"1"だったらリセットが行えます。
- * timeUpdateTimerInterrupt(INTERRUPT_ENABLE); を実行していれば /INT は"L" になります。 /INT出力は 15.63ms (1分更新時)または500ms（1秒更新時）で自動解除されます。
+ * UF(Update flag)が"1"になります。UFは手動でリセットしない限り保持されます。bool timeUpdateTimer(void) でUFの確認、および"1"だったらリセットが行えます。
+ * timeUpdateTimerInterrupt(ENABLE); を実行していれば /INT は"L" になります。 /INT出力は 15.63ms (1分更新時)または500ms（1秒更新時）で自動解除されます。

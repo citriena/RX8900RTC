@@ -7,7 +7,6 @@ RX8900RTC RTC;
 
 
 void setup() {
-  delay(100);
   Wire.begin();
   Serial.begin(9600);
   RTC.init();

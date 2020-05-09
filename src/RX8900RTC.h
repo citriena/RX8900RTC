@@ -56,15 +56,15 @@ typedef enum {
 } ALARM_TYPES_t;
 
 typedef enum {
-  INTERRUPT_ENABLE  = true,
-  INTERRUPT_DISABLE = false,
-} INTERRUPT_ENABLE_t;
+  ENABLE  = true,
+  DISABLE = false,
+} ENABLE_CONTROL_t;
 
 typedef enum {
-  CYCLE_4096HZ = 0b00000000, // 4096Hz
-  CYCLE_64HZ   = 0b00000001, // 64Hz
-  CYCLE_SECOND = 0b00000010, // second update
-  CYCLE_MINUTE = 0b00000011, // minute update
+  CLOCK_4096HZ  = 0b00000000, // 4096Hz
+  CLOCK_64HZ    = 0b00000001, // 64Hz
+  SECOND_UPDATE = 0b00000010, // second update
+  MINUTE_UPDATE = 0b00000011, // minute update
 } SOURCE_CLOCK_TYPES_t;
 
 
@@ -106,20 +106,20 @@ class RX8900RTC {
     static tmElements_t read(void);
     byte write(tmElements_t tm);
     void setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, byte hour, byte daydate);
-    void resetAlarm();
     void setAlarm(byte minute, byte hour);
     void setAlarm(byte minute);
     void setDayAlarm(byte minute, byte hour, byte daydate);   // set day of a month to daydate.
     void setWeekAlarm(byte minute, byte hour, byte daydate);  // set week alarm mask to daydate such as SUN | SAT.
-    void alarmInterrupt(INTERRUPT_ENABLE_t interruptEnabled);
-    bool alarmUp(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
+    void disableAlarm();
+    void alarmInterrupt(ENABLE_CONTROL_t Enabled);
+    bool alarm(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
     void setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle);
-    void resetFixedCycleTimer();
-    void fixedCycleTimerInterrupt(bool interruptEnabled);
-    bool fixedCycleTimerUp(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".
+    void disableFixedCycleTimer(void);
+    void fixedCycleTimerInterrupt(ENABLE_CONTROL_t Enabled);
+    bool fixedCycleTimer(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".
     void setTimeUpdateTimer(USEL_t uTiming);
-    void timeUpdateTimerInterrupt(bool interruptEnabled);
-    bool timeUpdateTimerUp(void);  // Returns UF (Update Flag) status and reset UF if UF is "1".
+    void timeUpdateTimerInterrupt(ENABLE_CONTROL_t enabled);
+    bool timeUpdateTimer(void);  // Returns UF (Update Flag) status and reset UF if UF is "1".
     bool IS_VLF(void);   // Returns IS VLF (Voltage Low Flag) status. TRUE: Supply voltage drop less than 1.6V or oscillation stopped.
     bool IS_VDET(void);  // Returns IS VDET (Voltage Detection Flag) FLAG status. TRUE: Supply voltage drop less than 1.95V.
     float temperature(void);
@@ -137,6 +137,8 @@ class RX8900RTC {
     byte IS_AF(void);                //IS ALARM TIME?
     void SET_AE(ALARM_TYPES_t reg);  //ALARM ENABLE
     void RESET_AE(ALARM_TYPES_t reg);//ALARM DISABLE
+    void SET_WADA_W(void);           //SET WADA BIT 0 (WEEK ALARM)
+    void SET_WADA_D(void);           //SET WADA BIT 1 (DAY ALARM)
 
     void SET_TIE(void);              //TIMER INTERRUPT ENABLE
     void RESET_TIE(void);            //TIMER INTERRUPT DISABLE
