@@ -1,15 +1,13 @@
 # RX8900RTC
  Arduino library that supports the SEIKO EPSON RX8900 Real-Time Clocks
- v1.0  Citriena Mar 2019
+
+citriena
 
 ## Introduction
 **RX8900RTC** is an Arduino library that supports the SEIKO EPSON RX8900 Real-Time Clocks.
-This library is baed on the sample sketch by AKIZUKI DENSHI TSUSHO CO.,LTD.
- http://akizukidenshi.com/catalog/g/gK-13009/
- http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip
- Some codes are based on DS3232RTC.CPP by Jack Christensen 06Mar2013
+This library is baed on the [sample sketch by AKIZUKI DENSHI TSUSHO CO.,LTD.]( http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip) for [AE-RX8900 module](http://akizukidenshi.com/catalog/g/gK-13009/).
 
-## Function
+## Functions
 ### Alarm
 The alarm interrupt generation function generates interrupt events for alarm settings such as date, day, hour, and
 minute settings.
@@ -25,13 +23,20 @@ See sample skech for basic usage.
 See Application Manual for details of each function.
 https://www5.epsondevice.com/en/products/rtc/rx8900ce.html
 
+## Releases
+
+### 1.0.0 - Mar  4, 2019
+
+### 1.0.1 - May 23, 2020
+* renamed some functions constants and variables
+
+
 ## 概要
-このArduino用ライブラリはセイコーエプソンのSEIKO EPSON RX8900 Real Time Clock Module用に作成したものです。実際に使用しているのは、秋月電子通商の「高精度ＲＴＣ（リアルタイムクロック）　ＲＸ８９００　ＤＩＰ化モジュール」  http://akizukidenshi.com/catalog/g/gK-13009/ です。
+このArduino用ライブラリはセイコーエプソンのSEIKO EPSON RX8900 Real Time Clock Module用に作成したものです。実際に使用しているのは、秋月電子通商の[高精度ＲＴＣ（リアルタイムクロック）　ＲＸ８９００　ＤＩＰ化モジュール](http://akizukidenshi.com/catalog/g/gK-13009/) です。
 
-Arduino用のRTCモジュール、およびそのライブラリは他にもいろいろありますが、私が使って見た限りではLEDを外してもなぜか数百uAと電池駆動で数カ月～年単位で使うには消費電流が無視できない大きさのものばかりでした。SEIKO EPSON RX8900 Real Time Clock Moduleは数uA以下と消費電流が非常に小さいのは確認できましたが、目的にあうArduinoライブラリが見つかりませんでしたので、自作しました。
+Arduino用のRTCモジュール、およびそのライブラリは他にもいろいろありますが、私が使って見た限りではLEDを外しても数百uAと電池駆動で数カ月～年単位で使うには消費電流が無視できない大きさのものばかりでした。SEIKO EPSON RX8900 Real Time Clock Moduleはデータシート通り数uA以下と消費電流が非常に小さいのは確認できましたが、目的にあうArduinoライブラリが見つかりませんでしたので自作しました。
 
-ベースは秋月電子通商で提供されているサンプルスケッチで、それをもとにライブラリ化しました。
- http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip
+ベースは秋月電子通商で提供されている[サンプルスケッチ](http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip)で、それをもとにライブラリ化しました。
 
 RX8900のアプリケーションマニュアルにある一通りの機能は一応実装したつもりです。基本的な使い方はサンプルスケッチを参照してください。アラーム、タイマー等個々の機能の詳細についてはRX8900のアプリケーションマニュアルを参照してください。
 https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
@@ -41,30 +46,31 @@ https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
 
 #### 設定
 
-##### void setAlarm(byte minute);
+    void setAlarm(byte minute);
 minuteで[分]を設定します。毎時、設定した[分]になると割り込みイベントが発生します。
 
-##### void setAlarm(byte minute, byte hour);
+    void setAlarm(byte minute, byte hour);
 minuteで[分]、hourで[時]を設定します。毎日、設定した[時][分]になると割り込みイベントが発生します。
 
-##### void setDayAlarm(byte minute, byte hour, byte daydate);
+    void setDayAlarm(byte minute, byte hour, byte daydate);
 minuteで[分]、hourで[時]、daydateで[日]を設定します。毎月、設定した[日][時][分]になると割り込みイベントが発生します。
 
-##### void setWeekAlarm(byte minute, byte hour, byte daydate);
+    void setWeekAlarm(byte minute, byte hour, byte daydate);
 minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設定した[曜][時][分]になると割り込みイベントが発生します。
 [曜]は以下で設定します。
  * 日: SUN, 月: MON, 火: TUE, 水: WED, 木: THU, 金: FRI, 土: SAT
 
 複数の[曜]が設定可能です。たとえば SUN | SAT とすれば日曜と土曜日に割り込みイベントが発生します。
 
-##### alarmInterrupt(ENABLE_CONTROL_t enabled);
+    void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
 割り込みイベント発生時における/INT の動作を指定します。
 
-enabled には以下が設定できます。
+interrupt には以下が設定できます。
  * ENABLE：割り込みイベント発生時に/INT を"L"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
 
-##### void disableAlarm(void);
+
+    void disableAlarm(void);
 アラームを無効にします。
 
 #### 割り込みイベント発生時
@@ -77,29 +83,30 @@ enabled には以下が設定できます。
 #### 設定
 定周期は、ソースクロックとタイマーカウンターで設定します。
 
-##### void setFixedCycleTimer(timerCounter, sourceClock);
+    void setFixedCycleTimer(timerCounter, sourceClock);
 * timerCounter(タイマーカウンター)：0～4095
 * sourceClock（ソースクロック）:
- * CLOCK_4096HZ：4096Hz
- * CLOCK_64HZ：64Hz
- * SECOND_UPDATE：1Hz（1秒周期）
- * MINUTE_UPDATE：1/60Hz（1分周期）
+  * CLOCK_4096HZ：4096Hz
+  * CLOCK_64HZ：64Hz
+  * SECOND_UPDATE：1Hz（1秒周期）
+  * MINUTE_UPDATE：1/60Hz（1分周期）
 
-が設定できます。ソースクロック毎にタイマーカウンターがカウントダウンしていき、0になったら割り込みイベントが発生します。このため定周期は、[ソースクロック]×[タイマーカウンター]となります。たとえば[ソースクロック]を1秒周期、タイマーカウンターを13とすれば、13秒ごとに割り込みイベントが発生します。割り込みイベントが発生するとタイマーカウンターは自動的に設定値に戻り、繰り返し動作します。
+が設定できます。ソースクロック毎にタイマーカウンターがカウントダウンしていき、0になったら割り込みイベントが発生します。このため定周期は、 ソースクロック × タイマーカウンター となります。たとえばソースクロックを1秒周期、タイマーカウンターを13とすれば、13秒ごとに割り込みイベントが発生します。割り込みイベントが発生するとタイマーカウンターは自動的に設定値に戻り、繰り返し動作します。
 
-##### fixedCycleTimerInterrupt(ENABLE_CONTROL_t enabled);
+    void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 割り込みイベント発生時における/INT の動作を指定します。
 
-enabled には以下が設定できます。
+interrupt には以下が設定できます。
  * ENABLE：割り込みイベント発生時に/INT を"L"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
 
-##### void disableFixedCycleTimer(void);
+
+    void disableFixedCycleTimer(void);
 定周期タイマーを無効にします。
 
 #### 割り込みイベント発生時
- * TF(Timer Flag)が"1"になります。TFは手動でリセットしない限り保持されます。bool fixedCycleTimer(void) でTFの確認、および"1"だったらリセットが行えます。
- * fixedCycleTimerInterrupt(ENABLE) を実行していれば /INT は"L" になります。 /INT出力は 7.813msで自動解除されます。
+ * TF(Timer Flag)が"1"になります。TFは手動でリセットしない限り保持されます。fixedCycleTimer(void); でTFの確認、および"1"だったらリセットが行えます。
+ * fixedCycleTimerInterrupt(ENABLE); を実行していれば /INT は"L" になります。 /INT出力は 7.813msで自動解除されます。
 
 #### カウントダウンのタイミング
  * ソースクロック1Hz（1秒周期）時のカウントダウンは､内部計時の[秒]更新に連動しません。
@@ -110,17 +117,18 @@ enabled には以下が設定できます。
 
 #### 設定
 
-##### void setTimeUpdateTimer(USEL_t uTiming);
+    void setTimeUpdateTimer(USEL_t usel);
 
-uTiming:
+usel:
  * UPDATE_SECOND_INT = 1秒更新
  * UPDATE_MINUTE_INT = 1分更新
 
-##### timeUpdateTimerInterrupt(ENABLE_CONTROL_t enabled);
+
+    void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 
 割り込みイベント発生時における/INT の動作を指定します。
 
-enabled:
+interrupt には以下の設定が行えます。
  * ENABLE：割り込みイベント発生時に/INT を"L"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
 

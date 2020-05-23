@@ -6,9 +6,6 @@
  * http://akizukidenshi.com/catalog/g/gK-13009/                                 *
  * http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip               *
  *                                                                              *
- * Some codes are based on DS3232RTC.CPP by Jack Christensen 06Mar2013          *
- *                                                                              *
- * Citriena  23Mar2019                                                          *
  *------------------------------------------------------------------------------*/ 
 #include <RX8900RTC.h>
 #include <Wire.h>
@@ -27,6 +24,11 @@ void RX8900RTC::init(void) {
   ByteWrite(Extension_Register_reg,0b00001000); //set WEEK ALARM , 1Hz to FOUT
   ByteWrite(Flag_Register_reg,     0b00000000); //reset all flag
   ByteWrite(Control_Register_reg,  0b01000000); //reset all flag. do not write 1 to RESET bit
+}
+
+
+void RX8900RTC::begin(void) {
+  init();
 }
 
 
@@ -153,8 +155,8 @@ void RX8900RTC::disableAlarm() {
  * Enable or disable an alarm "interrupt" which asserts the INT pin     *
  * on the RTC.                                                          *
  *----------------------------------------------------------------------*/
-void RX8900RTC::alarmInterrupt(ENABLE_CONTROL_t enabled) {
-  if (enabled) {
+void RX8900RTC::alarmInterrupt(INTERRUPT_CONTROL_t interrupt) {
+  if (interrupt) {
     SET_AIE();
   } else {
     RESET_AIE();
@@ -205,8 +207,8 @@ void RX8900RTC::disableFixedCycleTimer() {
  * cleared earliest 7.813 ms after the interrupt occurs.                *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::fixedCycleTimerInterrupt(ENABLE_CONTROL_t enabled) {
-  if (enabled) {
+void RX8900RTC::fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt) {
+  if (interrupt) {
     SET_TIE();
   } else {
     RESET_TIE();
@@ -227,13 +229,13 @@ bool RX8900RTC::fixedCycleTimer() {
 
 
 /*----------------------------------------------------------------------*
- * uTiming                                                              *
+ * usel                                                              *
  *   UPDATE_SECOND_INT: Update interrupt timing is once per second      *
  *   UPDATE_MINUTE_INT: Update interrupt timing is once per minute      *
  *----------------------------------------------------------------------*/
-void RX8900RTC::setTimeUpdateTimer(USEL_t uTiming) {
+void RX8900RTC::setTimeUpdateTimer(USEL_t usel) {
   RESET_UIE();
-  SET_USEL(uTiming);
+  SET_USEL(usel);
 }
 
 
@@ -247,8 +249,8 @@ void RX8900RTC::setTimeUpdateTimer(USEL_t uTiming) {
  * /INT pin status is prevented.                                        *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::timeUpdateTimerInterrupt(ENABLE_CONTROL_t enabled) {
-  if (enabled) {
+void RX8900RTC::timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt) {
+  if (interrupt) {
     SET_UIE();
   } else {
     RESET_UIE();  // can only stop /INT status change
@@ -495,6 +497,7 @@ byte RX8900RTC::subZeller( int y, int m, int d ) {
  *----------------------------------------------------------------------*/
 byte RX8900RTC::dec2bcd(uint8_t n) {
   return n + 6 * (n / 10);
+//  return ((n / 10) & 0x0f) << 4 | ((n % 10) & 0x0f); // slower
 }
 
 
@@ -503,6 +506,7 @@ byte RX8900RTC::dec2bcd(uint8_t n) {
  *----------------------------------------------------------------------*/
 byte __attribute__ ((noinline)) RX8900RTC::bcd2dec(uint8_t n) {
   return n - 6 * (n >> 4);
+//  return ((n >> 4) & 0x0f) * 10 + (n & 0x0f); // slower
 }
 
 //RX8900RTC RTC = RX8900RTC();            //instantiate an RTC object

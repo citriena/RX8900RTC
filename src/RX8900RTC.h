@@ -58,13 +58,13 @@ typedef enum {
 typedef enum {
   ENABLE  = true,
   DISABLE = false,
-} ENABLE_CONTROL_t;
+} INTERRUPT_CONTROL_t;
 
 typedef enum {
   CLOCK_4096HZ  = 0b00000000, // 4096Hz
   CLOCK_64HZ    = 0b00000001, // 64Hz
   SECOND_UPDATE = 0b00000010, // second update
-  MINUTE_UPDATE = 0b00000011, // minute update
+  MINUTE_UPDATE = 0b00000011  // minute update
 } SOURCE_CLOCK_TYPES_t;
 
 
@@ -101,6 +101,7 @@ class RX8900RTC {
 
     RX8900RTC();
     void init(void);
+    void begin(void);
     static time_t get(void);    //must be static to work with setSyncProvider() in the Time library
     byte set(time_t t);
     static tmElements_t read(void);
@@ -111,14 +112,14 @@ class RX8900RTC {
     void setDayAlarm(byte minute, byte hour, byte daydate);   // set day of a month to daydate.
     void setWeekAlarm(byte minute, byte hour, byte daydate);  // set week alarm mask to daydate such as SUN | SAT.
     void disableAlarm();
-    void alarmInterrupt(ENABLE_CONTROL_t Enabled);
+    void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
     bool alarm(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
     void setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle);
     void disableFixedCycleTimer(void);
-    void fixedCycleTimerInterrupt(ENABLE_CONTROL_t Enabled);
+    void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
     bool fixedCycleTimer(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".
-    void setTimeUpdateTimer(USEL_t uTiming);
-    void timeUpdateTimerInterrupt(ENABLE_CONTROL_t enabled);
+    void setTimeUpdateTimer(USEL_t usel);
+    void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
     bool timeUpdateTimer(void);  // Returns UF (Update Flag) status and reset UF if UF is "1".
     bool IS_VLF(void);   // Returns IS VLF (Voltage Low Flag) status. TRUE: Supply voltage drop less than 1.6V or oscillation stopped.
     bool IS_VDET(void);  // Returns IS VDET (Voltage Detection Flag) FLAG status. TRUE: Supply voltage drop less than 1.95V.

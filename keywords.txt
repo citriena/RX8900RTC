@@ -33,6 +33,7 @@ regRX8900_t	KEYWORD1
 #######################################
 
 init	KEYWORD2
+begin	KEYWORD2
 get	KEYWORD2
 set	KEYWORD2
 read	KEYWORD2
