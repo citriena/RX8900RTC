@@ -45,32 +45,38 @@ https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
 [分]、[時]、[曜]、[日]などに対する割り込みイベントを発生させる機能です。
 
 #### 設定
-
-    void setAlarm(byte minute);
+```
+void setAlarm(byte minute);
+```
 minuteで[分]を設定します。毎時、設定した[分]になると割り込みイベントが発生します。
-
-    void setAlarm(byte minute, byte hour);
+```
+void setAlarm(byte minute, byte hour);
+```
 minuteで[分]、hourで[時]を設定します。毎日、設定した[時][分]になると割り込みイベントが発生します。
-
-    void setDayAlarm(byte minute, byte hour, byte daydate);
+```
+void setDayAlarm(byte minute, byte hour, byte daydate);
+```
 minuteで[分]、hourで[時]、daydateで[日]を設定します。毎月、設定した[日][時][分]になると割り込みイベントが発生します。
-
-    void setWeekAlarm(byte minute, byte hour, byte daydate);
+```
+void setWeekAlarm(byte minute, byte hour, byte daydate);
+```
 minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設定した[曜][時][分]になると割り込みイベントが発生します。
 [曜]は以下で設定します。
  * 日: SUN, 月: MON, 火: TUE, 水: WED, 木: THU, 金: FRI, 土: SAT
 
 複数の[曜]が設定可能です。たとえば SUN | SAT とすれば日曜と土曜日に割り込みイベントが発生します。
-
-    void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
+```
+void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
+```
 割り込みイベント発生時における/INT の動作を指定します。
 
 interrupt には以下が設定できます。
  * ENABLE：割り込みイベント発生時に/INT を"L"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
 
-
-    void disableAlarm(void);
+```
+void disableAlarm(void);
+```
 アラームを無効にします。
 
 #### 割り込みイベント発生時
@@ -82,8 +88,9 @@ interrupt には以下が設定できます。
 
 #### 設定
 定周期は、ソースクロックとタイマーカウンターで設定します。
-
-    void setFixedCycleTimer(timerCounter, sourceClock);
+```
+void setFixedCycleTimer(timerCounter, sourceClock);
+```
 * timerCounter(タイマーカウンター)：0～4095
 * sourceClock（ソースクロック）:
   * CLOCK_4096HZ：4096Hz
@@ -92,16 +99,18 @@ interrupt には以下が設定できます。
   * MINUTE_UPDATE：1/60Hz（1分周期）
 
 が設定できます。ソースクロック毎にタイマーカウンターがカウントダウンしていき、0になったら割り込みイベントが発生します。このため定周期は、 ソースクロック × タイマーカウンター となります。たとえばソースクロックを1秒周期、タイマーカウンターを13とすれば、13秒ごとに割り込みイベントが発生します。割り込みイベントが発生するとタイマーカウンターは自動的に設定値に戻り、繰り返し動作します。
-
-    void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
+```
+void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
+```
 割り込みイベント発生時における/INT の動作を指定します。
 
 interrupt には以下が設定できます。
  * ENABLE：割り込みイベント発生時に/INT を"L"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"H"のままです。
 
-
-    void disableFixedCycleTimer(void);
+```
+void disableFixedCycleTimer(void);
+```
 定周期タイマーを無効にします。
 
 #### 割り込みイベント発生時
@@ -116,16 +125,16 @@ interrupt には以下が設定できます。
 1秒更新、または1分更新にて内部計時に連動したタイミングで割り込みイベントを発生させる機能です。この時刻更新割り込み機能は停止できません。
 
 #### 設定
-
-    void setTimeUpdateTimer(USEL_t usel);
-
+```
+void setTimeUpdateTimer(USEL_t usel);
+```
 usel:
  * UPDATE_SECOND_INT = 1秒更新
  * UPDATE_MINUTE_INT = 1分更新
 
-
-    void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
-
+```
+void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
+```
 割り込みイベント発生時における/INT の動作を指定します。
 
 interrupt には以下の設定が行えます。
