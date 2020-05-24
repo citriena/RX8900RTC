@@ -495,7 +495,7 @@ byte RX8900RTC::subZeller( int y, int m, int d ) {
 /*----------------------------------------------------------------------*
  * Decimal-to-BCD conversion                                            *
  *----------------------------------------------------------------------*/
-byte RX8900RTC::dec2bcd(uint8_t n) {
+byte RX8900RTC::dec2bcd(byte n) {
   return n + 6 * (n / 10);
 //  return ((n / 10) & 0x0f) << 4 | ((n % 10) & 0x0f); // slower
 }
@@ -504,7 +504,7 @@ byte RX8900RTC::dec2bcd(uint8_t n) {
 /*----------------------------------------------------------------------*
  * BCD-to-Decimal conversion                                            *
  *----------------------------------------------------------------------*/
-byte __attribute__ ((noinline)) RX8900RTC::bcd2dec(uint8_t n) {
+byte __attribute__ ((noinline)) RX8900RTC::bcd2dec(byte n) {
   return n - 6 * (n >> 4);
 //  return ((n >> 4) & 0x0f) * 10 + (n & 0x0f); // slower
 }

@@ -75,24 +75,24 @@ typedef enum {
 
 
 typedef struct {
-  unsigned char SEC     = 0x00;//0x00-0x59 (bcd)
-  unsigned char MIN     = 0x00;//0x00-0x59 (bcd)
-  unsigned char HOUR    = 0x00;//0x00-0x23 (bcd)
-  unsigned char WEEK    = 0x01;//SUN=0x01,MON=0x02,TUE=0x04,WED=0x08,THU=0x10,FRI=0x20,SAT=0x40
-  unsigned char DAY     = 0x01;//0x00-0x28-0x31)
-  unsigned char MONTH   = 0x01;//JUN=0x01,FEB=0x02,MAR=0x03,APR=0x04,MAY=0x05,JUN=0x06,JLY=0x07,AUG=0x08,SEP=0x09,OCT=0x10,NOV=0x11,DEC=0x12
-  unsigned char YEAR    = 0x00;//0x00-0x99
-  unsigned char RAM;
-  unsigned char MIN_Alarm;
-  unsigned char HOUR_Alarm;
-  unsigned char WEEK_DAY_Alarm;
-  unsigned char Timer_Counter_0;
-  unsigned char Timer_Counter_1;
-  unsigned char Extension_Register;
-  unsigned char Flag_Register;
-  unsigned char Control_Register;
-  unsigned char TEMP;
-  unsigned char Backup_Function;
+  byte SEC     = 0x00;//0x00-0x59 (bcd)
+  byte MIN     = 0x00;//0x00-0x59 (bcd)
+  byte HOUR    = 0x00;//0x00-0x23 (bcd)
+  byte WEEK    = 0x01;//SUN=0x01,MON=0x02,TUE=0x04,WED=0x08,THU=0x10,FRI=0x20,SAT=0x40
+  byte DAY     = 0x01;//0x00-0x28-0x31)
+  byte MONTH   = 0x01;//JUN=0x01,FEB=0x02,MAR=0x03,APR=0x04,MAY=0x05,JUN=0x06,JLY=0x07,AUG=0x08,SEP=0x09,OCT=0x10,NOV=0x11,DEC=0x12
+  byte YEAR    = 0x00;//0x00-0x99
+  byte RAM;
+  byte MIN_Alarm;
+  byte HOUR_Alarm;
+  byte WEEK_DAY_Alarm;
+  byte Timer_Counter_0;
+  byte Timer_Counter_1;
+  byte Extension_Register;
+  byte Flag_Register;
+  byte Control_Register;
+  byte TEMP;
+  byte Backup_Function;
 } regRX8900_t;
 
 
@@ -157,8 +157,8 @@ class RX8900RTC {
     void SET_USEL(USEL_t ust);       //SET UPDATE INTERRUPT SELECT
 
     byte subZeller( int y, int m, int d );
-    byte dec2bcd(uint8_t n);
-    static byte bcd2dec(uint8_t n);
+    byte dec2bcd(byte n);
+    static byte bcd2dec(byte n);
 };
 
 //extern RX8900RTC RTC;
