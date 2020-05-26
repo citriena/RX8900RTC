@@ -114,7 +114,7 @@ class RX8900RTC {
     void disableAlarm();
     void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
     bool alarm(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".
-    void setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceCycle);
+    void setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceClock);
     void disableFixedCycleTimer(void);
     void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
     bool fixedCycleTimer(void); // Returns TF (Timer Flag) status and reset TF if TF is "1".

@@ -46,19 +46,19 @@ https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
 
 #### 設定
 ```
-void setAlarm(byte minute);
+void setAlarm(uint8_t minute);
 ```
 minuteで[分]を設定します。毎時、設定した[分]になると割り込みイベントが発生します。
 ```
-void setAlarm(byte minute, byte hour);
+void setAlarm(uint8_t minute, uint8_t hour);
 ```
 minuteで[分]、hourで[時]を設定します。毎日、設定した[時][分]になると割り込みイベントが発生します。
 ```
-void setDayAlarm(byte minute, byte hour, byte daydate);
+void setDayAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);
 ```
 minuteで[分]、hourで[時]、daydateで[日]を設定します。毎月、設定した[日][時][分]になると割り込みイベントが発生します。
 ```
-void setWeekAlarm(byte minute, byte hour, byte daydate);
+void setWeekAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);
 ```
 minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設定した[曜][時][分]になると割り込みイベントが発生します。
 [曜]は以下で設定します。
@@ -89,7 +89,7 @@ void disableAlarm(void);
 #### 設定
 定周期は、ソースクロックとタイマーカウンターで設定します。
 ```
-void setFixedCycleTimer(timerCounter, sourceClock);
+void setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceClock);
 ```
 * timerCounter(タイマーカウンター)：0～4095
 * sourceClock（ソースクロック）:
