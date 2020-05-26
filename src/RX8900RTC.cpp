@@ -45,7 +45,7 @@ time_t RX8900RTC::get() {
 /*----------------------------------------------------------------------*
  * Sets the RTC to the given time_t value.                              *
  *----------------------------------------------------------------------*/
-byte RX8900RTC::set(time_t t) {
+uint8_t RX8900RTC::set(time_t t) {
   tmElements_t tm;
 
   breakTime(t, tm);
@@ -75,8 +75,8 @@ tmElements_t RX8900RTC::read(void) {
 /*----------------------------------------------------------------------*
  * Sets the RTC's time from a tmElements_t structure.                   *
  *----------------------------------------------------------------------*/
-byte RX8900RTC::write(tmElements_t tm) {
-  byte dayOfWeek = subZeller(tm.Year, tm.Month, tm.Day);
+uint8_t RX8900RTC::write(tmElements_t tm) {
+  uint8_t dayOfWeek = subZeller(tm.Year, tm.Month, tm.Day);
   tm.Wday = 1 << (dayOfWeek - 1);
   RESET();
   ByteWrite(SEC_reg,dec2bcd(tm.Second));
@@ -90,7 +90,7 @@ byte RX8900RTC::write(tmElements_t tm) {
 }
 
 
-void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, byte hour, byte daydate) {
+void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, uint8_t minute, uint8_t hour, uint8_t daydate) {
   RESET_AIE();
   if (minute < 60) {                 // cause an alarm when the minute match. 60 > cause no minute match alarm.
     minute = dec2bcd(minute);
@@ -122,22 +122,22 @@ void RX8900RTC::setFullAlarm(WEEK_DAY_ALARM_TYPES_t wdAlarmType, byte minute, by
 }
 
 
-void RX8900RTC::setAlarm(byte minute, byte hour) {
+void RX8900RTC::setAlarm(uint8_t minute, uint8_t hour) {
   setFullAlarm(NO_WEEK_DAY_ALARM, minute, hour, 0);
 }
 
 
-void RX8900RTC::setAlarm(byte minute) {
+void RX8900RTC::setAlarm(uint8_t minute) {
   setFullAlarm(NO_WEEK_DAY_ALARM, minute, 99, 0);
 }
 
 
-void RX8900RTC::setDayAlarm(byte minute, byte hour, byte daydate) {
+void RX8900RTC::setDayAlarm(uint8_t minute, uint8_t hour, uint8_t daydate) {
   setFullAlarm(DAY_ALARM, minute, hour, daydate);
 }
 
 
-void RX8900RTC::setWeekAlarm(byte minute, byte hour, byte daydate) {
+void RX8900RTC::setWeekAlarm(uint8_t minute, uint8_t hour, uint8_t daydate) {
   setFullAlarm(WEEK_ALARM, minute, hour, daydate);
 }
 
@@ -181,7 +181,7 @@ bool RX8900RTC::alarm() {
  * Fixed-cycle interrupt interval = (timerCounter * courceCycle)        *
  * See Application Manual for details.                                  *
  *----------------------------------------------------------------------*/
-void RX8900RTC::setFixedCycleTimer(int timerCounter, SOURCE_CLOCK_TYPES_t sourceClock) {
+void RX8900RTC::setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceClock) {
   RESET_TE();
   RESET_TF();
   RESET_TIE();
@@ -285,7 +285,7 @@ void RX8900RTC::COUNT_START(void) {
 }
 
 
-void RX8900RTC::ByteWrite(byte reg, byte data) {
+void RX8900RTC::ByteWrite(uint8_t reg, uint8_t data) {
   Wire.beginTransmission(RX8900A_ADRS);
   Wire.write(reg);
   Wire.write(data);
@@ -293,8 +293,8 @@ void RX8900RTC::ByteWrite(byte reg, byte data) {
 }
 
 
-byte RX8900RTC::ByteRead(byte reg) {
-  byte data = 0;
+uint8_t RX8900RTC::ByteRead(uint8_t reg) {
+  uint8_t data = 0;
   Wire.beginTransmission(RX8900A_ADRS);
   Wire.write(reg);
   Wire.endTransmission(false);
@@ -364,7 +364,7 @@ void RX8900RTC::RESET_AF(void) {         //RESET ALARM FLAG
 
 
 //---------------------------
-byte RX8900RTC::IS_AF(void) {            //IS ALARM TIME?
+uint8_t RX8900RTC::IS_AF(void) {            //IS ALARM TIME?
   return (ByteRead(Flag_Register_reg) & 0b00001000);
 }
 
@@ -410,7 +410,7 @@ void RX8900RTC::RESET_TF(void) {         //RESET TIMER FLAG
 
 
 //---------------------------
-byte RX8900RTC::IS_TF(void) {            //IS TIMER COUNT UP?
+uint8_t RX8900RTC::IS_TF(void) {            //IS TIMER COUNT UP?
   return (ByteRead(Flag_Register_reg) & 0b00010000);
 }
 
@@ -457,7 +457,7 @@ void RX8900RTC::RESET_UF(void) {         //RESET UPDATE FLAG
 
 
 //---------------------------
-byte RX8900RTC::IS_UF(void) {            //IS UPDATE INTERRUPT?
+uint8_t RX8900RTC::IS_UF(void) {            //IS UPDATE INTERRUPT?
   return (ByteRead(Flag_Register_reg) & 0b00100000);
 }
 
@@ -484,7 +484,7 @@ bool RX8900RTC::IS_VDET(void) {
 // Zeller’s Congruence; Find the Day for a Date
 // 0: Sunday, 6:Saturday
 // https://edu.clipper.co.jp/pg-2-47.html
-byte RX8900RTC::subZeller( int y, int m, int d ) {
+uint8_t RX8900RTC::subZeller( uint16_t y, uint16_t m, uint16_t d ) {
   if( m < 3 ) {
     y--; m += 12;
   }
@@ -495,7 +495,7 @@ byte RX8900RTC::subZeller( int y, int m, int d ) {
 /*----------------------------------------------------------------------*
  * Decimal-to-BCD conversion                                            *
  *----------------------------------------------------------------------*/
-byte RX8900RTC::dec2bcd(byte n) {
+uint8_t RX8900RTC::dec2bcd(uint8_t n) {
   return n + 6 * (n / 10);
 //  return ((n / 10) & 0x0f) << 4 | ((n % 10) & 0x0f); // slower
 }
@@ -504,7 +504,7 @@ byte RX8900RTC::dec2bcd(byte n) {
 /*----------------------------------------------------------------------*
  * BCD-to-Decimal conversion                                            *
  *----------------------------------------------------------------------*/
-byte __attribute__ ((noinline)) RX8900RTC::bcd2dec(byte n) {
+uint8_t __attribute__ ((noinline)) RX8900RTC::bcd2dec(uint8_t n) {
   return n - 6 * (n >> 4);
 //  return ((n >> 4) & 0x0f) * 10 + (n & 0x0f); // slower
 }
