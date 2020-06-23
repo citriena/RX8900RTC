@@ -7,7 +7,7 @@ citriena
 **RX8900RTC** is an Arduino library that supports the SEIKO EPSON RX8900 Real-Time Clocks.
 This library is baed on the [sample sketch by AKIZUKI DENSHI TSUSHO CO.,LTD.]( http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip) for [AE-RX8900 module](http://akizukidenshi.com/catalog/g/gK-13009/).
 
-## Functions
+## Features
 ### Alarm
 The alarm interrupt generation function generates interrupt events for alarm settings such as date, day, hour, and
 minute settings.
@@ -17,6 +17,11 @@ between 244.14us and 4095 minutes.
 ### Time Update Interrupt
 The time update interrupt function generates interrupt events at one-second or one-minute intervals, according to
 the timing of the internal clock.
+
+## Functions
+
+
+
 ## Usage
 See sample skech for basic usage.
 
@@ -38,8 +43,16 @@ Arduino用のRTCモジュール、およびそのライブラリは他にもい�
 
 ベースは秋月電子通商で提供されている[サンプルスケッチ](http://akizukidenshi.com/download/ds/akizuki/RX8900_SAMPLE.zip)で、それをもとにライブラリ化しました。
 
-RX8900のアプリケーションマニュアルにある一通りの機能は一応実装したつもりです。基本的な使い方はサンプルスケッチを参照してください。アラーム、タイマー等個々の機能の詳細についてはRX8900のアプリケーションマニュアルを参照してください。
+RX8900のアプリケーションマニュアルにある一通りの機能は一応実装したつもりです。機能は大きく分けて以下の３つです。
+* アラーム
+* 定周期タイマー
+* 時刻更新割り込み
+
+## 機能
+個々の機能について簡単に説明します。詳細についてはRX8900のアプリケーションマニュアルを参照してください。
 https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html
+
+具体的な使い方はサンプルスケッチを参照してください。
 
 ### アラーム
 [分]、[時]、[曜]、[日]などに対する割り込みイベントを発生させる機能です。
