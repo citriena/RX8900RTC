@@ -40,7 +40,7 @@ void begin(void);
 static time_t get(void);
 static tmElements_t read(void);
 ```
-static にしているのはtime.libの setSyncProvider() 等に対応するためです。
+static にしているのはtimeLibの setSyncProvider() 等に対応するためです。
 
 #### 設定
 こちらも日時を格納する変数としてtime_t型 を使う方法と tmElements_t型を使う方法があります。

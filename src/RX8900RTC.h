@@ -1,6 +1,6 @@
 #ifndef RX8900RTC_h
 #define RX8900RTC_h
-#include <Time.h>
+#include <TimeLib.h>    // https://github.com/PaulStoffregen/Time
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include <Arduino.h> 
@@ -33,15 +33,16 @@
 #define Backup_Function_reg    0x18
 
 // week alarm mask
-#define NO_WEEK 0x00
-#define SUN 0x01   // 0b00000001
-#define MON 0x02   // 0b00000010
-#define TUE 0x04   // 0b00000100
-#define WED 0x08   // 0b00001000
-#define THU 0x10   // 0b00010000
-#define FRI 0x20   // 0b00100000
-#define SAT 0x40   // 0b01000000
-
+typedef enum {
+  NO_WEEK = 0x00,
+  SUN = 0x01,   // 0b00000001
+  MON = 0x02,   // 0b00000010
+  TUE = 0x04,   // 0b00000100
+  WED = 0x08,   // 0b00001000
+  THU = 0x10,   // 0b00010000
+  FRI = 0x20,   // 0b00100000
+  SAT = 0x40    // 0b01000000
+} WEEK_TYPES_t;
 
 typedef enum {
   NO_WEEK_DAY_ALARM = 0x00,
@@ -110,7 +111,7 @@ class RX8900RTC {
     void setAlarm(uint8_t minute, uint8_t hour);
     void setAlarm(uint8_t minute);
     void setDayAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);   // set day of a month to daydate.
-    void setWeekAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);  // set week alarm mask to daydate such as SUN | SAT.
+    void setWeekAlarm(uint8_t minute, uint8_t hour, WEEK_TYPES_t daydate);  // set week alarm mask to daydate such as SUN | SAT.
     void disableAlarm();
     void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
     bool alarm(void);  // Returns AF (Alarm Flag) status and reset AF if AF is "1".

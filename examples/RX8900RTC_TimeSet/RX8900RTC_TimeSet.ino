@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include <TimeLib.h>
 #include <Wire.h>
-#include <RX8900RTC.h>
+#include <TimeLib.h>    // https://github.com/PaulStoffregen/Time
+#include <RX8900RTC.h>  // https://github.com/citriena/RX8900RTC
 
 RX8900RTC RTC;
 

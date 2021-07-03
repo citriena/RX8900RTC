@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
-#include <TimeLib.h>
 #include <Wire.h>
-#include <RX8900RTC.h>
+#include <TimeLib.h>    // https://github.com/PaulStoffregen/Time
+#include <RX8900RTC.h>  // https://github.com/citriena/RX8900RTC
 
 RX8900RTC RTC;
 
@@ -35,7 +35,7 @@ void setup() {
 // set fixed cycle timer
   setFixedCycleInt(7, SECOND_UPDATE);// set timer to fire every 7 seconds interval.
 
-// You can use alarm ,time update timer, and fixed cycle timer togather.
+// You can use alarm ,time update timer, and fixed cycle timer together.
 // You can identify what event has occured by alarm() fixedCycleTimer, and timeUpdateTimer().
 // See Application Manual for details.
 //  https://www5.epsondevice.com/ja/products/rtc/rx8900sa.html (Japanese)

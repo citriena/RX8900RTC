@@ -137,8 +137,8 @@ void RX8900RTC::setDayAlarm(uint8_t minute, uint8_t hour, uint8_t daydate) {
 }
 
 
-void RX8900RTC::setWeekAlarm(uint8_t minute, uint8_t hour, uint8_t daydate) {
-  setFullAlarm(WEEK_ALARM, minute, hour, daydate);
+void RX8900RTC::setWeekAlarm(uint8_t minute, uint8_t hour, WEEK_TYPES_t daydate) {
+  setFullAlarm(WEEK_ALARM, minute, hour, (uint8_t)daydate);
 }
 
 
