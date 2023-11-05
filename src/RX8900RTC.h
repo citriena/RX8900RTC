@@ -33,16 +33,15 @@
 #define Backup_Function_reg    0x18
 
 // week alarm mask
-typedef enum {
-  NO_WEEK = 0x00,
-  SUN = 0x01,   // 0b00000001
-  MON = 0x02,   // 0b00000010
-  TUE = 0x04,   // 0b00000100
-  WED = 0x08,   // 0b00001000
-  THU = 0x10,   // 0b00010000
-  FRI = 0x20,   // 0b00100000
-  SAT = 0x40    // 0b01000000
-} WEEK_TYPES_t;
+typedef byte WEEK_TYPES_t;
+#define NO_WEEK 0x00  // 0b00000000
+#define SUN     0x01  // 0b00000001
+#define MON     0x02  // 0b00000010
+#define TUE     0x04  // 0b00000100
+#define WED     0x08  // 0b00001000
+#define THU     0x10  // 0b00010000
+#define FRI     0x20  // 0b00100000
+#define SAT     0x40  // 0b01000000
 
 typedef enum {
   NO_WEEK_DAY_ALARM = 0x00,
@@ -162,6 +161,6 @@ class RX8900RTC {
     static uint8_t bcd2dec(uint8_t n);
 };
 
-//extern RX8900RTC RTC;
+//extern RX8900RTC myRTC;
 
 #endif

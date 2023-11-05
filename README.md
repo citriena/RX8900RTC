@@ -25,7 +25,7 @@ The time update interrupt function generates interrupt events at one-second or o
 ## Constructor
 
 ```
-RX8900RTC RTC;
+RX8900RTC myRTC;
 ```
 
 ## Functions
@@ -52,26 +52,28 @@ static tmElements_t read(void);
 ### Alarm
 
 #### Setting alarm
+***
 ```
 void setAlarm(uint8_t minute);
 void setAlarm(uint8_t minute, uint8_t hour);
 ```
-* minute: The second value to set the alarm to.
+* minute: The minute value to set the alarm to.
 * hour: The hour value to set the alarm to.
-
+***
 ```
 void setDayAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);
 ```
 * daydate: The date of the month to set the alarm to.
-
+***
 ```
 void setWeekAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);
 ```
 * daydate: The day(s) of the week to set the alarm to. The days are SUN, MON, TUE, WED, THU, FRI,and SAT.
 
  Multiple days of the week can be set as SUN | SAT
-
+***
 #### Other functions
+***
 ```
 void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
 ```
@@ -80,18 +82,18 @@ Specifies /INT status of RX8900 when an alarm interrupt event occurs.
 interrupt:
  * ENABLE：/INT status changes from HIGH to LOW
  * DISABLE：/INT status do not change (remains HIGH).
-
+***
 ```
 bool alarm(void)
 ```
 * Returns true when AF (Alarm Flag) is "1". Otherwise (AF is "0") returns false.
 * When AF is "1", writes "0" to clear AF. /INT will changes to HIGH if LOW.
-
+***
 ```
 void disableAlarm(void);
 ```
 Stops alarm function.
-
+***
 #### When an alarm event occurs
 * AF (Alarm Flag) value changes from "0" to 1". AF value is retaind until cleared manually.
 
@@ -102,6 +104,7 @@ Stops alarm function.
 The fixed-cycle timer generates interrupt events periodically at a fixed cycle between 244.14us and 4095 minutes.
 
 #### Functions
+***
 ```
 void setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceClock);
 ```
@@ -114,7 +117,7 @@ Set the fixed-cycle timer interval.
   * MINUTE_UPDATE：1/60Hz (Once per minute)
 
 The fixed-cycle timer interval is [sourceClock] x [timerCounter].
-
+***
 ```
 void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 ```
@@ -123,18 +126,18 @@ Specifies /INT status of RX8900 when a fixed-cycle timer interrupt event occurs.
 interrupt:
  * ENABLE：/INT status changes from HIGH to LOW
  * DISABLE：/INT status do not change (remains HIGH).
-
+***
 ```
 bool fixedCycleTimer(void);
 ```
 * Returns true when TF(Timer Flag) is "1". Otherwise (TF is "0") returns false.
 * When TF is "1" write "0" to clear TF.
-
+***
 ```
 void disableFixedCycleTimer(void);
 ```
 Stops fixed-cycle timer function.
-
+***
 #### When a fixed-cycle timer interrupt event occurs
 * TF(Timer Flag) value changes from "0" to 1". TF value is retaind until cleared manually.
 
@@ -152,6 +155,7 @@ The events will occure according to the timing of the internal clock update.
 The time update interrupt function can not be fully stopped.
 
 #### Functions
+***
 ```
 void setTimeUpdateTimer(USEL_t usel);
 ```
@@ -160,7 +164,7 @@ Set time update timer interval.
 usel:
  * UPDATE_SECOND_INT: interrupt event will occure once per second.
  * UPDATE_MINUTE_INT: interrupt event will occure once per minute.
-
+***
 ```
 void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 ```
@@ -169,13 +173,13 @@ Specifies /INT status of RX8900 when a time update interrupt event occurs.
 interrupt:
  * ENABLE：/INT status changes from HIGH to LOW
  * DISABLE：/INT status do not change (remains HIGH).
-
+***
 ```
 bool timeUpdateTimer(void);
 ```
 * Returns true when UF (Update Flag) is "1". Otherwise (UF is "0") returns false.
 * When UF is "1" write "0" to cleart UF.
-
+***
 #### When a time update timer interrupt event occurs
 
 * UF(Updater Flag) value changes from "0" to 1". UF value is retaind until cleared manually.
@@ -200,4 +204,7 @@ https://www5.epsondevice.com/en/products/rtc/rx8900ce.html
 ### 1.0.0 - Mar  4, 2019
 
 ### 1.0.1 - May 23, 2020
-* renamed some functions constants and variables
+* rename some functions constants and variables
+
+### 1.0.2 - Mov 05, 2023
+* bug fix: modify WEEK_TYPES_t definition

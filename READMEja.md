@@ -14,7 +14,7 @@ RX8900のアプリケーションマニュアルにある一通りの機能は�
 
 ## コンストラクタ
 ```
-RX8900RTC RTC;
+RX8900RTC myRTC;
 ```
 設定はありません。
 
@@ -54,18 +54,22 @@ uint8_t write(tmElements_t tm);
 [分]、[時]、[曜]、[日]などに対する割り込みイベントを発生させる機能です。
 
 #### 設定
+***
 ```
 void setAlarm(uint8_t minute);
 ```
 minuteで[分]を設定します。毎時、設定した[分]になると割り込みイベントが発生します。
+***
 ```
 void setAlarm(uint8_t minute, uint8_t hour);
 ```
 minuteで[分]、hourで[時]を設定します。毎日、設定した[時][分]になると割り込みイベントが発生します。
+***
 ```
 void setDayAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);
 ```
 minuteで[分]、hourで[時]、daydateで[日]を設定します。毎月、設定した[日][時][分]になると割り込みイベントが発生します。
+***
 ```
 void setWeekAlarm(uint8_t minute, uint8_t hour, uint8_t daydate);
 ```
@@ -74,6 +78,7 @@ minuteで[分]、hourで[時]、daydateで[曜]を設定します。毎週、設
  * 日: SUN, 月: MON, 火: TUE, 水: WED, 木: THU, 金: FRI, 土: SAT
 
 複数の[曜]が設定可能です。たとえば SUN | SAT とすれば日曜と土曜日に割り込みイベントが発生します。
+***
 ```
 void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
 ```
@@ -82,18 +87,18 @@ void alarmInterrupt(INTERRUPT_CONTROL_t interrupt);
 interrupt には以下が設定できます。
  * ENABLE：割り込みイベント発生時に/INT を"LOW"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"HIGH"のままです。
-
+***
 ```
 bool alarm(void);
 ```
 * AF(Alarm Flag)を確認し、"1"だったらture , "0" だったらfalseを返します。
 * AFが"1"だったら"0"を書き込み、リセットします。また、/INT がLOWだったらHIGHにリセットされます。
-
+***
 ```
 void disableAlarm(void);
 ```
 アラームを無効にします。
-
+***
 #### 割り込みイベント発生時
  * AF(Alarm Flag)が"1"になります。AFは手動でリセットしない限り保持されます。alarm(void) でAFの確認、および"1"だったらリセットが行えます。
  * alarmInterrupt(ENABLE) を実行していれば /INT は"LOW" になります。 /INT出力は手動解除しない限り保持されます。alarm(void)でAFをリセットすると /INTもリセット（"HIGH"）されます。
@@ -102,6 +107,7 @@ void disableAlarm(void);
 定期的な割り込みイベントを発生させる機能です。設定できる定周期は244.14us～4095minです。
 
 #### 設定
+***
 定周期は、ソースクロックとタイマーカウンターで設定します。
 ```
 void setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceClock);
@@ -114,6 +120,7 @@ void setFixedCycleTimer(uint16_t timerCounter, SOURCE_CLOCK_TYPES_t sourceClock)
   * MINUTE_UPDATE：1/60Hz（1分周期）
 
 が設定できます。ソースクロック毎にタイマーカウンターがカウントダウンしていき、0になったら割り込みイベントが発生します。このため定周期は、 ソースクロック × タイマーカウンター となります。たとえばソースクロックを1秒周期、タイマーカウンターを13とすれば、13秒ごとに割り込みイベントが発生します。割り込みイベントが発生するとタイマーカウンターは自動的に設定値に戻り、繰り返し動作します。
+***
 ```
 void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 ```
@@ -122,17 +129,17 @@ void fixedCycleTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 interrupt には以下が設定できます。
  * ENABLE：割り込みイベント発生時に/INT を"LOW"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"HIGH"のままです。
-
+***
 ```
 bool fixedCycleTimer(void);
 ```
 TF(Timer Flag)を確認し、"1"だったらture , "0" だったらfalseを返します。また、"1"だったら"0"を書き込み、リセットします。
-
+***
 ```
 void disableFixedCycleTimer(void);
 ```
 定周期タイマーを無効にします。
-
+***
 #### 割り込みイベント発生時
  * TF(Timer Flag)が"1"になります。TFは手動でリセットしない限り保持されます。fixedCycleTimer(void) でTFの確認、および"1"だったらリセットが行えます。
  * fixedCycleTimerInterrupt(ENABLE) を実行していれば /INT は"LOW" になります。 /INT出力は ソースクロックがCLOCK_4096HZの場合は122us、それ以外は7.813msで自動解除されます。
@@ -147,13 +154,14 @@ void disableFixedCycleTimer(void);
 1秒更新、または1分更新にて内部計時に連動したタイミングで割り込みイベントを発生させる機能です。この時刻更新割り込み機能は停止できません。
 
 #### 設定
+***
 ```
 void setTimeUpdateTimer(USEL_t usel);
 ```
 usel:
  * UPDATE_SECOND_INT = 1秒更新
  * UPDATE_MINUTE_INT = 1分更新
-
+***
 ```
 void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 ```
@@ -162,12 +170,12 @@ void timeUpdateTimerInterrupt(INTERRUPT_CONTROL_t interrupt);
 interrupt には以下の設定が行えます。
  * ENABLE：割り込みイベント発生時に/INT を"LOW"にします。
  * DISABLE：割り込みイベント発生時に/INT は変化せず、"HIGH"のままです。
-
+***
 ```
 bool timeUpdateTimer(void);
 ```
 UF(Update flag)を確認し、"1"だったらture , "0" だったらfalseを返します。また、"1"だったら"0"を書き込み、リセットします。
-
+***
 #### 割り込みイベント発生時
  * UF(Update flag)が"1"になります。UFは手動でリセットしない限り保持されます。timeUpdateTimer(void) でUFの確認、および"1"だったらリセットが行えます。
  * timeUpdateTimerInterrupt(ENABLE) を実行していれば /INT は"LOW" になります。 /INT出力は 15.63ms (1分更新時)または500ms（1秒更新時）で自動解除されます。
@@ -183,4 +191,7 @@ float temperature(void);
 ### 1.0.0 - Mar  4, 2019
 
 ### 1.0.1 - May 23, 2020
-* renamed some functions constants and variables
+* rename some functions constants and variables
+
+### 1.0.2 - Mov 05, 2023
+* bug fix: modify WEEK_TYPES_t definition

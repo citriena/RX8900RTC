@@ -3,20 +3,20 @@
 #include <TimeLib.h>    // https://github.com/PaulStoffregen/Time
 #include <RX8900RTC.h>  // https://github.com/citriena/RX8900RTC
 
-RX8900RTC RTC;
+RX8900RTC myRTC;
 
 
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-  RTC.init();
-  RTC.set(compileTime());  // set compiled time to RTC
+  myRTC.init();
+  myRTC.set(compileTime());  // set compiled time to RTC
 //  tmElements_t tm = {0, 0, 12, 0, 5, 5, CalendarYrToTm(2020)}; // second, minute, hour, week, day, month, year
-//  RTC.write(tm);
+//  myRTC.write(tm);
 }
 
 void loop() {
-  serialTime(RTC.read());
+  serialTime(myRTC.read());
   delay(1000);
 }
 
